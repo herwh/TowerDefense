@@ -10,6 +10,8 @@ public class CoordinateLabel : MonoBehaviour
     private void Awake()
     {
         _label = GetComponent<TextMeshPro>();
+        
+        DisplayCoordinates();
     }
 
     private void Update()
@@ -17,16 +19,23 @@ public class CoordinateLabel : MonoBehaviour
         if (!Application.isPlaying)
         {
             DisplayCoordinates();
+            UpdateObjectName();
         }
     }
 
     private void DisplayCoordinates()
     {
         var parentPosition = transform.parent.position;
+        var snapMove=UnityEditor.EditorSnapSettings.move;
 
-        _coordinates.x = Mathf.RoundToInt(parentPosition.x);
-        _coordinates.y = Mathf.RoundToInt(parentPosition.z);
+        _coordinates.x = Mathf.RoundToInt(parentPosition.x/snapMove.x); //snapMove=10 in IncrementSnapping
+        _coordinates.y = Mathf.RoundToInt(parentPosition.z/snapMove.z);
 
         _label.text = _coordinates.x + "," + _coordinates.y;
+    }
+
+    private void UpdateObjectName()
+    {
+        transform.parent.name = _coordinates.ToString();
     }
 }
